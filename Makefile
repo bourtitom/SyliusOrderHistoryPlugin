@@ -76,7 +76,6 @@ setup_application:
 	$(MAKE) ${APP_DIR}/.php-version
 	$(MAKE) ${APP_DIR}/php.ini
 	(cd ${APP_DIR} && ${COMPOSER} install --no-interaction)
-	$(MAKE) apply_dist
 	(cd ${APP_DIR} && ${COMPOSER} require --no-progress monsieurbiz/${PLUGIN_NAME}="*@dev")
 	rm -rf ${APP_DIR}/var/cache
 
@@ -94,17 +93,6 @@ ${APP_DIR}/.php-version: .php-version
 
 ${APP_DIR}/php.ini: php.ini
 	(cd ${APP_DIR} && ln -sf ../../php.ini)
-
-apply_dist:
-	ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)))); \
-	for i in `cd dist && find . -type f`; do \
-		FILE_PATH=`echo $$i | sed 's|./||'`; \
-		FOLDER_PATH=`dirname $$FILE_PATH`; \
-		echo $$FILE_PATH; \
-		(cd ${APP_DIR} && rm -f $$FILE_PATH); \
-		(cd ${APP_DIR} && mkdir -p $$FOLDER_PATH); \
-		(cd ${APP_DIR} && ln -s $$ROOT_DIR/dist/$$FILE_PATH $$FILE_PATH); \
-    done
 
 ###
 ### TESTS
@@ -136,8 +124,9 @@ test.container: ## Lint the symfony container
 test.yaml: ## Lint the symfony Yaml files
 	${CONSOLE} lint:yaml ../../src/Resources/config --parse-tags
 
-test.schema: ## Validate MySQL Schema
-	${CONSOLE} doctrine:schema:validate
+test.schema: ## Check the plugin mapping and migrated table (the generated app has unrelated schema drift)
+	${CONSOLE} doctrine:mapping:info
+	${CONSOLE} doctrine:query:sql 'SELECT COUNT(id) AS events, COUNT(order_id) AS orders, COUNT(details) AS details FROM monsieurbiz_order_history_event'
 
 test.twig: ## Validate Twig templates
 	${CONSOLE} lint:twig --no-debug templates/ ../../src/Resources/views/

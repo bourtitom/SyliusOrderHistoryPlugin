@@ -6,3 +6,5 @@ mbiz_order_history:
         order_states: 'Status de commande'
         unkown: 'Inconnu'
         order_timeline: 'Chronologie de la commande'
+        date: 'Date'
+        time: 'Heure'

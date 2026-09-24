@@ -6,3 +6,5 @@ mbiz_order_history:
         order_states: 'Order states'
         unkown: 'Unknown'
         order_timeline: 'Order Timeline'
+        date: 'Date'
+        time: 'Time'

@@ -5,11 +5,11 @@
 {% elseif event.adminUser.username|default(null) is not null %}
     {% set adminUserLink = path('sylius_admin_admin_user_update', {id: event.adminUser.id}) %}
 {% endif %}
-<span data-bs-toggle="tooltip" data-bs-title="s">
+<span data-bs-toggle="tooltip" data-bs-title="{{ 'mbiz_order_history.ui.date'|trans }}">
     {{ ux_icon('tabler:calendar') }}
     {{ event.createdAt|format_datetime('full', 'none', locale='fr') }}
 </span>
-<span data-bs-toggle="tooltip" data-bs-title="sd">
+<span data-bs-toggle="tooltip" data-bs-title="{{ 'mbiz_order_history.ui.time'|trans }}">
     {{ ux_icon('tabler:clock') }}
     {{ event.createdAt|format_datetime('none', 'long', locale='fr') }}
 </span>

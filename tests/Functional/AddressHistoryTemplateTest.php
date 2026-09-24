@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace MonsieurBiz\SyliusOrderHistoryPlugin\Tests\Functional;
 
+use MonsieurBiz\SyliusOrderHistoryPlugin\Component\OrderHistory;
+use MonsieurBiz\SyliusOrderHistoryPlugin\Repository\OrderHistoryEventRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Yaml\Yaml;
 use Twig\Environment;
@@ -78,6 +80,45 @@ final class AddressHistoryTemplateTest extends KernelTestCase
             ],
         );
 
+        self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
+        self::assertStringNotContainsString('<script>alert(1)</script>', $html);
+        self::assertStringContainsString('data-bs-title="Date"', $html);
+        self::assertStringContainsString('data-bs-title="Time"', $html);
+    }
+
+    public function testTimelineUsesTheOrderSpecificRepositoryQuery(): void
+    {
+        $events = [new \stdClass(), new \stdClass()];
+        $repository = $this->createMock(OrderHistoryEventRepositoryInterface::class);
+        $repository->expects(self::once())->method('getByOrderId')->with(11)->willReturn($events);
+
+        $component = new OrderHistory($repository);
+        $component->orderId = 11;
+
+        self::assertSame($events, $component->getOrderHistoryEvents());
+    }
+
+    public function testNestedDetailsRemainVisibleAndEscaped(): void
+    {
+        self::bootKernel();
+
+        $html = self::getContainer()->get(Environment::class)->render(
+            '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/content/sections/timelines/order_history/main/content.html.twig',
+            [
+                'hookable_metadata' => [
+                    'context' => [
+                        'event' => [
+                            'details' => [
+                                'payment' => ['gateway' => ['transaction_id' => 'PAY-123', 'note' => '<script>alert(1)</script>']],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        );
+
+        self::assertStringContainsString('PAY-123', $html);
+        self::assertStringContainsString('Transaction id', $html);
         self::assertStringContainsString('&lt;script&gt;alert(1)&lt;/script&gt;', $html);
         self::assertStringNotContainsString('<script>alert(1)</script>', $html);
     }
