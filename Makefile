@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 SHELL=/bin/bash
 APP_DIR=tests/Application
-SYLIUS_VERSION=2.0.0
+SYLIUS_VERSION ?= 2.2.0
 SYMFONY=cd ${APP_DIR} && symfony
 COMPOSER=symfony composer
 CONSOLE=${SYMFONY} console
@@ -110,7 +110,10 @@ apply_dist:
 ### TESTS
 ### ¯¯¯¯¯
 
-test.all: test.composer test.phpstan test.phpmd test.phpcs test.yaml test.schema test.twig test.container ## Run all tests in once
+test.all: test.composer test.phpstan test.phpmd test.phpcs test.yaml test.schema test.twig test.container test.functional ## Run all tests in once
+
+test.functional: ## Render the address history overrides in the test application
+	(cd ${APP_DIR} && vendor/bin/phpunit -c phpunit.xml.dist ../../tests/Functional)
 
 test.composer: ## Validate composer.json
 	${COMPOSER} validate --strict

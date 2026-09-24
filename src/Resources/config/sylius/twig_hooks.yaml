@@ -62,3 +62,38 @@ sylius_twig_hooks:
             content:
                 template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/content/sections/timelines/order_history/main/statuses.html.twig'
                 priority: 0
+
+        'sylius_admin.order.history.content.sections.addresses.billing_address.details':
+            data:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/data.html.twig'
+        'sylius_admin.order.history.content.sections.addresses.shipping_address.details':
+            data:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/data.html.twig'
+
+        'sylius_admin.order.history.content.sections.addresses.billing_address.details.data':
+            phone_number:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: phoneNumber, label: 'sylius.ui.phone_number' }
+            company:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: company, label: 'sylius.ui.company' }
+            province_code:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: provinceCode, label: 'sylius.ui.province_code' }
+            province_name:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: provinceName, label: 'sylius.ui.province_name' }
+
+        'sylius_admin.order.history.content.sections.addresses.shipping_address.details.data':
+            phone_number:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: phoneNumber, label: 'sylius.ui.phone_number' }
+            company:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: company, label: 'sylius.ui.company' }
+            province_code:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: provinceCode, label: 'sylius.ui.province_code' }
+            province_name:
+                template: '@MonsieurBizSyliusOrderHistoryPlugin/admin/order/history/address/optional_field.html.twig'
+                configuration: { field: provinceName, label: 'sylius.ui.province_name' }

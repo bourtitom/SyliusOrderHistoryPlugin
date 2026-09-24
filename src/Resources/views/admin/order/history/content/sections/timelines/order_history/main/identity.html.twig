@@ -2,12 +2,8 @@
 
 {% if event.shopUser.username|default(null) is not null %}
     {% set shopUserLink = path('sylius_admin_customer_show', {id: event.shopUser.customer.id}) %}
-    {% set user = '<a href="' ~ shopUserLink ~ '"> ' ~ ux_icon('tabler:user') ~ event.shopUser.username ~ '</a>' %}
 {% elseif event.adminUser.username|default(null) is not null %}
     {% set adminUserLink = path('sylius_admin_admin_user_update', {id: event.adminUser.id}) %}
-    {% set user = '<a href="' ~ adminUserLink ~ '">' ~ ux_icon('tabler:lock') ~ event.adminUser.username ~ '</a>' %}
-{% else %}
-    {% set user = '<i class="user secret icon"></i> ' ~ ' anonymous' %}
 {% endif %}
 <span data-bs-toggle="tooltip" data-bs-title="s">
     {{ ux_icon('tabler:calendar') }}
@@ -26,5 +22,11 @@
     {{ event.firewall }}
 </span>
 <span data-bs-toggle="tooltip" data-bs-title="User">
-    {{ user|raw }}
+    {% if shopUserLink|default(null) is not null %}
+        <a href="{{ shopUserLink }}">{{ ux_icon('tabler:user') }} {{ event.shopUser.username }}</a>
+    {% elseif adminUserLink|default(null) is not null %}
+        <a href="{{ adminUserLink }}">{{ ux_icon('tabler:lock') }} {{ event.adminUser.username }}</a>
+    {% else %}
+        <i class="user secret icon"></i> anonymous
+    {% endif %}
 </span>
